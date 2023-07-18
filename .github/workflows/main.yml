@@ -42,7 +42,7 @@ jobs:
           fail-on-error: true          
       
       - name: Run Newman in Docker (API Tests)        
-        run: docker run --network host --name api-integration-tests -v "$(pwd)/TodoListApiTests/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=http://localhost:8080" --verbose --insecure --reporters cli,junit --reporter-junit-export api-tests-results.xml
+        run: docker run --network host --name api-integration-tests -v "$(pwd)/TodoListApiTests/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=http://localhost:8080" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
       
       - name: Copy API Test Results
         run: docker cp api-integration-tests:etc/newman/result/api-tests-results.xml .
