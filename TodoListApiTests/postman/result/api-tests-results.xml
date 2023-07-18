@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="TodoListApi" tests="5" time="0.123">
+  <testsuite name="api / TodoItems / {id} / Retrieves a specific TodoItem by ID." id="d25046b7-12d0-46a4-871b-02e029c75e50" timestamp="2023-07-18T20:17:30.375Z" tests="1" failures="2" errors="0" time="0.019">
+    <testcase name="GetTodoItem" time="0.019" classname="TodoListApi">
+      <failure type="AssertionFailure" message="expected { Object (id, _details, ...) } to have property 'code' of 200, but got 404">
+        <![CDATA[Failed 2 times.]]>
+        <![CDATA[Collection JSON ID: d190b5de-2ad9-4206-bab3-453b04d94ad2.]]>
+        <![CDATA[Collection name: TodoListApi.]]>
+        <![CDATA[Request name: api / TodoItems / {id} / Retrieves a specific TodoItem by ID..]]>
+        <![CDATA[Test description: GetTodoItem.]]>
+        <![CDATA[Error message: expected { Object (id, _details, ...) } to have property 'code' of 200, but got 404.]]>
+        <![CDATA[Stacktrace: AssertionError: expected { Object (id, _details, ...) } to have property 'code' of 200, but got 404
+   at Object.eval sandbox-script.js:1:1).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="api / TodoItems / {id} / Updates an existing TodoItem." id="17823b48-c8c1-460c-a9dd-f12d9bb60d36" timestamp="2023-07-18T20:17:30.375Z" tests="1" failures="2" errors="0" time="0.014">
+    <testcase name="UpdateTodoItem" time="0.014" classname="TodoListApi">
+      <failure type="AssertionFailure" message="expected 404 to equal 204">
+        <![CDATA[Failed 2 times.]]>
+        <![CDATA[Collection JSON ID: d190b5de-2ad9-4206-bab3-453b04d94ad2.]]>
+        <![CDATA[Collection name: TodoListApi.]]>
+        <![CDATA[Request name: api / TodoItems / {id} / Updates an existing TodoItem..]]>
+        <![CDATA[Test description: UpdateTodoItem.]]>
+        <![CDATA[Error message: expected 404 to equal 204.]]>
+        <![CDATA[Stacktrace: AssertionError: expected 404 to equal 204
+   at Object.eval sandbox-script.js:1:2).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="api / TodoItems / {id} / Deletes a TodoItem by ID." id="c30fc1fd-188a-408a-906d-852fb405b9bb" timestamp="2023-07-18T20:17:30.375Z" tests="1" failures="2" errors="0" time="0.011">
+    <testcase name="DeleteTodoItem" time="0.011" classname="TodoListApi">
+      <failure type="AssertionFailure" message="expected { Object (id, _details, ...) } to have property 'code' of 204, but got 404">
+        <![CDATA[Failed 2 times.]]>
+        <![CDATA[Collection JSON ID: d190b5de-2ad9-4206-bab3-453b04d94ad2.]]>
+        <![CDATA[Collection name: TodoListApi.]]>
+        <![CDATA[Request name: api / TodoItems / {id} / Deletes a TodoItem by ID..]]>
+        <![CDATA[Test description: DeleteTodoItem.]]>
+        <![CDATA[Error message: expected { Object (id, _details, ...) } to have property 'code' of 204, but got 404.]]>
+        <![CDATA[Stacktrace: AssertionError: expected { Object (id, _details, ...) } to have property 'code' of 204, but got 404
+   at Object.eval sandbox-script.js:1:3).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="api / TodoItems / Retrieves all TodoItems." id="4d1240ab-d623-4c3e-98fd-8fd4c0960369" timestamp="2023-07-18T20:17:30.375Z" tests="1" failures="1" errors="0" time="0.022">
+    <testcase name="GetTodoItems" time="0.022" classname="TodoListApi">
+      <failure type="AssertionFailure" message="expected 404 to equal 200">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: d190b5de-2ad9-4206-bab3-453b04d94ad2.]]>
+        <![CDATA[Collection name: TodoListApi.]]>
+        <![CDATA[Request name: api / TodoItems / Retrieves all TodoItems..]]>
+        <![CDATA[Test description: GetTodoItems.]]>
+        <![CDATA[Error message: expected 404 to equal 200.]]>
+        <![CDATA[Stacktrace: AssertionError: expected 404 to equal 200
+   at Object.eval sandbox-script.js:1:4).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="api / TodoItems / Creates a new TodoItem." id="d06ce046-d599-4eb8-b937-b504c6d0a07e" timestamp="2023-07-18T20:17:30.375Z" tests="1" failures="1" errors="0" time="0.013">
+    <testcase name="CreateTodoItem" time="0.013" classname="TodoListApi">
+      <failure type="AssertionFailure" message="expected { Object (id, _details, ...) } to have property 'code' of 201, but got 404">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: d190b5de-2ad9-4206-bab3-453b04d94ad2.]]>
+        <![CDATA[Collection name: TodoListApi.]]>
+        <![CDATA[Request name: api / TodoItems / Creates a new TodoItem..]]>
+        <![CDATA[Test description: CreateTodoItem.]]>
+        <![CDATA[Error message: expected { Object (id, _details, ...) } to have property 'code' of 201, but got 404.]]>
+        <![CDATA[Stacktrace: AssertionError: expected { Object (id, _details, ...) } to have property 'code' of 201, but got 404
+   at Object.eval sandbox-script.js:1:5).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+</testsuites>

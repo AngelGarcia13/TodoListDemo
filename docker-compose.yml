@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  todolistapi:
+    image: todolistapi
+    build:
+      context: .
+      dockerfile: TodoListApi/Dockerfile
+    ports:
+      - "8080:80"
+
+networks:
+  default:
+    name: default-network

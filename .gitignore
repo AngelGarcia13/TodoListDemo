@@ -396,3 +396,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+TodoListApiTests/.DS_Store
+TodoListApi/Models/.DS_Store
+TodoListApi/.DS_Store
+.DS_Store
