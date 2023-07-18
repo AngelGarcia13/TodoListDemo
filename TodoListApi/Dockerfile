@@ -13,16 +13,16 @@ COPY ["TodoListUnitTests/TodoListUnitTests.csproj", "TodoListUnitTests/"]
 RUN dotnet restore "TodoListUnitTests/TodoListUnitTests.csproj"
 COPY . .
 WORKDIR "/src/TodoListApi"
-RUN dotnet build "TodoListApi.csproj" -c Release -o /app/build
+RUN dotnet build "TodoListApi.csproj" -c Release -o /app
 WORKDIR "/src/TodoListUnitTests"
-RUN dotnet build "TodoListUnitTests.csproj" -c Release -o /app/build
+RUN dotnet build "TodoListUnitTests.csproj" -c Release -o /app
 RUN dotnet test "TodoListUnitTests.csproj" --logger "trx;LogFileName=TodoListUnitTests.trx" --collect:"XPlat Code Coverage" --results-directory /app/testresults
 
 FROM build AS publish
 WORKDIR "/src/TodoListApi"
-RUN dotnet publish "TodoListApi.csproj" -c Release -o /app/publish
+RUN dotnet publish "TodoListApi.csproj" -c Release -o /app
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "TodoListApi.dll"]
