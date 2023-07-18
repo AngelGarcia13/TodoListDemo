@@ -39,6 +39,9 @@ jobs:
           name: Unit Tests
           path: "**/TodoListUnitTests.trx"                            
           reporter: dotnet-trx
+          only-summary: 'false'
+          list-suites: 'all'
+          list-tests: 'all'
           fail-on-error: true          
       
       - name: Stop Docker Compose
