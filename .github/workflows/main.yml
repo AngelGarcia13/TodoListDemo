@@ -47,13 +47,13 @@ jobs:
       - name: Run Newman (API Tests)        
         uses: docker://postman/newman:latest
         with:
-          args: run TodoListApiTests/postman/TodoListApi.postman_collection.json --env-var "baseUrl=http://localhost:8080" --verbose --insecure --reporters cli,junit --reporter-junit-export api-tests-results.xml
+          args: run TodoListApiTests/postman/TodoListApi.postman_collection.json --network host --env-var "baseUrl=http://localhost:8080" --verbose --insecure --reporters cli,junit --reporter-junit-export api-tests-results.xml
 
       - name: API Tests Reporter
         uses: dorny/test-reporter@v1
         if: always()
         with:
-          name: Cypress Tests
+          name: API Tests
           path: api-tests-results.xml
           reporter: java-junit
           fail-on-error: true
