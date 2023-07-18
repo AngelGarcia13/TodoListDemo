@@ -47,13 +47,19 @@ jobs:
       - name: Copy API Test Results
         run: docker cp api-integration-tests:etc/newman/result/api-tests-results.xml .
       
+      - name: List API Test Results
+        run: ls -R
+      
       - name: API Tests Reporter
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v1.6.0
         if: always()
         with:
           name: API Tests
           path: api-tests-results.xml
           reporter: java-junit
+          only-summary: 'false'
+          list-suites: 'all'
+          list-tests: 'all'
           fail-on-error: true
       
       - name: Stop Docker Compose
