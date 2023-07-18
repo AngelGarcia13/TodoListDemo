@@ -44,10 +44,8 @@ jobs:
           list-tests: 'all'
           fail-on-error: true          
       
-      - name: Run Newman (API Tests)        
-        uses: docker://postman/newman:latest
-        with:
-          args: run --network host TodoListApiTests/postman/TodoListApi.postman_collection.json --env-var "baseUrl=http://localhost:8080" --verbose --insecure --reporters cli,junit --reporter-junit-export api-tests-results.xml
+      - name: Run Newman in Docker (API Tests)        
+        run: docker run --network host --name api-integration-tests -t postman/newman run TodoListApiTests/postman/TodoListApi.postman_collection.json --env-var "baseUrl=http://localhost:8080" --verbose --insecure --reporters cli,junit --reporter-junit-export api-tests-results.xml
 
       - name: API Tests Reporter
         uses: dorny/test-reporter@v1
