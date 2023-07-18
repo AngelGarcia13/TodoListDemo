@@ -1,0 +1,68 @@
+name: CI Build
+
+on:
+  pull_request:
+    branches:
+    - main
+  push:
+    branches:
+      - main
+
+jobs:
+  build-run-and-test:
+    runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+      checks: write
+      contents: write
+      pull-requests: write
+      actions: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build and Run Docker Compose
+        run: |
+          docker-compose build
+          docker-compose up -d
+      
+      - name: Copy Unit Test Results
+        run: docker cp $(docker-compose ps -q todolistapi):/app/testresults ./test-results
+      
+      - name: Unit Tests Reporter
+        uses: dorny/test-reporter@v1.6.0
+        if: always()
+        with:
+          name: Unit Tests
+          path: "**/TodoListUnitTests.trx"                            
+          reporter: dotnet-trx
+          only-summary: 'false'
+          list-suites: 'all'
+          list-tests: 'all'
+          fail-on-error: true          
+      
+      - name: Run Newman in Docker (API Tests)        
+        run: docker run --network host --name api-integration-tests -v "$(pwd)/TodoListApiTests/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=http://localhost:8080" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
+      
+      - name: Copy API Test Results
+        run: docker cp api-integration-tests:etc/newman/result/api-tests-results.xml .
+      
+      - name: List API Test Results
+        run: ls -R
+      
+      - name: API Tests Reporter
+        uses: dorny/test-reporter@v1.6.0
+        if: always()
+        with:
+          name: API Tests
+          path: api-tests-results.xml
+          reporter: java-junit
+          only-summary: 'false'
+          list-suites: 'all'
+          list-tests: 'all'
+          fail-on-error: true
+      
+      - name: Stop Docker Compose
+        run: docker-compose down
+        
+        
