@@ -27,8 +27,8 @@ jobs:
       - name: List unit test results
         run: ls ./test-results
       
-      - name: Test Report
-        uses: dorny/test-reporter@v1
+      - name: Test Reporter
+        uses: dorny/test-reporter@v1.6.0
         if: always()
         with:
           name: Unit Tests
