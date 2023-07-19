@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="TodoListApi" tests="5" time="0.415">
+  <testsuite name="api / TodoItems / {id} / Retrieves a specific TodoItem by ID." id="04880c17-8bc9-45bb-9724-0c3a11262d57" timestamp="2023-07-19T14:34:32.583Z" tests="1" failures="0" errors="0" time="0.145">
+    <testcase name="GetTodoItem" time="0.145" classname="TodoListApi"/>
+  </testsuite>
+  <testsuite name="api / TodoItems / {id} / Updates an existing TodoItem." id="09bce3eb-af8a-4668-81be-ee7c1fb42236" timestamp="2023-07-19T14:34:32.583Z" tests="1" failures="0" errors="0" time="0.034">
+    <testcase name="UpdateTodoItem" time="0.034" classname="TodoListApi"/>
+  </testsuite>
+  <testsuite name="api / TodoItems / {id} / Deletes a TodoItem by ID." id="a8e741bc-d0ea-4e77-b630-b647e443c582" timestamp="2023-07-19T14:34:32.583Z" tests="1" failures="0" errors="0" time="0.020">
+    <testcase name="DeleteTodoItem" time="0.020" classname="TodoListApi"/>
+  </testsuite>
+  <testsuite name="api / TodoItems / Retrieves all TodoItems." id="4960c4e1-1b53-4f37-919e-5cb4773d9ba0" timestamp="2023-07-19T14:34:32.583Z" tests="1" failures="1" errors="0" time="0.006">
+    <testcase name="GetTodoItems" time="0.006" classname="TodoListApi">
+      <failure type="AssertionFailure" message="expected 404 to equal 200">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: d190b5de-2ad9-4206-bab3-453b04d94ad2.]]>
+        <![CDATA[Collection name: TodoListApi.]]>
+        <![CDATA[Request name: api / TodoItems / Retrieves all TodoItems..]]>
+        <![CDATA[Test description: GetTodoItems.]]>
+        <![CDATA[Error message: expected 404 to equal 200.]]>
+        <![CDATA[Stacktrace: AssertionError: expected 404 to equal 200
+   at Object.eval sandbox-script.js:1:4).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="api / TodoItems / Creates a new TodoItem." id="f853d80c-b830-4a25-9408-69a84dee116f" timestamp="2023-07-19T14:34:32.583Z" tests="1" failures="0" errors="0" time="0.011">
+    <testcase name="CreateTodoItem" time="0.011" classname="TodoListApi"/>
+  </testsuite>
+</testsuites>

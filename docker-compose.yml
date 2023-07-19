@@ -8,6 +8,23 @@ services:
       dockerfile: TodoListApi/Dockerfile
     ports:
       - "8080:80"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=TodoListDB;User Id=sa;Password=MyToDoDatabaseSuperSecretPassword;MultipleActiveResultSets=true;TrustServerCertificate=true
+    depends_on:
+          - sqlserver
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:latest
+    environment:
+      SA_PASSWORD: "MyToDoDatabaseSuperSecretPassword"
+      ACCEPT_EULA: "Y"
+    ports:
+      - '1433:1433'
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P MyToDoDatabaseSuperSecretPassword -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      retries: 10
+      start_period: 10s
+      timeout: 3s   
 
 networks:
   default:

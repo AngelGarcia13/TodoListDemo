@@ -32,6 +32,7 @@ namespace TodoListApi.Controllers
         [ProducesResponseType(typeof(IEnumerable<TodoItem>), 200)]
         public ActionResult<IEnumerable<TodoItem>> GetTodoItems()
         {
+            return NotFound();
             return _todoItemsService.GetTodoItems().ToList();
         }
 

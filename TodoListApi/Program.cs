@@ -9,8 +9,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 
+// Add DbContext and configure SQL Server
 builder.Services.AddDbContext<TodoListContext>(options =>
-        options.UseInMemoryDatabase("TodoList"));
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Apply pending migrations
+using (var scope = builder.Services.BuildServiceProvider().CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<TodoListContext>();
+    dbContext.Database.Migrate();
+}
 
 builder.Services.AddScoped<ITodoItemsService, TodoItemsService>();
 
