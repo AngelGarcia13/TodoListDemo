@@ -41,14 +41,11 @@ jobs:
           list-tests: 'all'
           fail-on-error: true          
       
-      - name: Run Newman in Docker (API Tests)        
+      - name: Run Newman in Docker (CI API Tests)        
         run: docker run --network host --name api-integration-tests -v "$(pwd)/TodoListApiTests/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=http://localhost:8080" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
       
-      - name: Copy API Test Results
+      - name: Copy CI API Test Results
         run: docker cp api-integration-tests:etc/newman/result/api-tests-results.xml .
-      
-      - name: List API Test Results
-        run: ls -R
       
       - name: API Tests Reporter
         uses: dorny/test-reporter@v1.6.0
@@ -76,6 +73,88 @@ jobs:
       - name: Stop Docker Compose
         run: docker-compose down
 
+  qa-deploy:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    needs: build-run-and-test
+    environment:
+      name: 'QA'
+      url: ${{ steps.deploy-to-webapp-qa.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: todolistapi-net-app
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp-qa
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'api-todolist'
+          slot-name: 'qa'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FC8F2BCA310241C287F2F1C518677D25 }}
+          package: .      
+      
+      - name: Run Newman in Docker (QA API Tests)        
+        run: docker run --network host --name api-integration-tests-qa -v "$(pwd)/TodoListApiTests/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=${{ steps.deploy-to-webapp-qa.outputs.webapp-url }}" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
+      
+      - name: Copy QA API Test Results
+        run: docker cp api-integration-tests-qa:etc/newman/result/api-tests-results.xml ./qa
+      
+      - name: QA API Tests Reporter
+        uses: dorny/test-reporter@v1.6.0
+        if: always()
+        with:
+          name: QA API Tests
+          path: ./qa/api-tests-results.xml
+          reporter: java-junit
+          only-summary: 'false'
+          list-suites: 'all'
+          list-tests: 'all'
+          fail-on-error: true
+  
+  stg-deploy:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    needs: qa-deploy
+    environment:
+      name: 'STG'
+      url: ${{ steps.deploy-to-webapp-stg.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: todolistapi-net-app
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp-stg
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'api-todolist'
+          slot-name: 'stg'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FC8F2BCA310241C287F2F1C518677D25 }}
+          package: .      
+      
+      - name: Run Newman in Docker (STG API Tests)        
+        run: docker run --network host --name api-integration-tests-stg -v "$(pwd)/TodoListApiTests/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=${{ steps.deploy-to-webapp-stg.outputs.webapp-url }}" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
+      
+      - name: Copy STG API Test Results
+        run: docker cp api-integration-tests-stg:etc/newman/result/api-tests-results.xml ./stg
+      
+      - name: STG API Tests Reporter
+        uses: dorny/test-reporter@v1.6.0
+        if: always()
+        with:
+          name: STG API Tests
+          path: ./stg/api-tests-results.xml
+          reporter: java-junit
+          only-summary: 'false'
+          list-suites: 'all'
+          list-tests: 'all'
+          fail-on-error: true
+  
   prod-deploy:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
