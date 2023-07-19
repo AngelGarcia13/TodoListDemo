@@ -42,7 +42,7 @@ jobs:
           fail-on-error: true          
       
       - name: Run Newman in Docker (CI API Tests)        
-        run: docker run --network host --name api-integration-tests -v "$(pwd)/TodoListApiTests/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=http://localhost:8080" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
+        run: docker run --network default-network --name api-integration-tests -v "$(pwd)/TodoListApiTests/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=http://localhost:8080" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
       
       - name: Copy CI API Test Results
         run: docker cp api-integration-tests:etc/newman/result/api-tests-results.xml .
@@ -120,14 +120,14 @@ jobs:
         run: docker run --network host --name api-integration-tests-qa -v "$(pwd)/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=${{ vars.AZURE_WEBAPP_URL }}" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
       
       - name: Copy QA API Test Results
-        run: docker cp api-integration-tests-qa:etc/newman/result/api-tests-results.xml .
+        run: docker cp api-integration-tests-qa:etc/newman/result/api-tests-results.xml /qareport
       
       - name: QA API Tests Reporter
         uses: dorny/test-reporter@v1.6.0
         if: always()
         with:
           name: QA API Tests
-          path: api-tests-results.xml
+          path: /qareport/api-tests-results.xml
           reporter: java-junit
           only-summary: 'false'
           list-suites: 'all'
@@ -173,14 +173,14 @@ jobs:
         run: docker run --network host --name api-integration-tests-stg -v "$(pwd)/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=${{ vars.AZURE_WEBAPP_URL }}" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
       
       - name: Copy STG API Test Results
-        run: docker cp api-integration-tests-stg:etc/newman/result/api-tests-results.xml .
+        run: docker cp api-integration-tests-stg:etc/newman/result/api-tests-results.xml /stgreport
       
       - name: STG API Tests Reporter
         uses: dorny/test-reporter@v1.6.0
         if: always()
         with:
           name: STG API Tests
-          path: api-tests-results.xml
+          path: /stgreport/api-tests-results.xml
           reporter: java-junit
           only-summary: 'false'
           list-suites: 'all'
