@@ -62,7 +62,39 @@ jobs:
           list-tests: 'all'
           fail-on-error: true
       
+      - name: Copy API Artifact
+        run: docker cp $(docker-compose ps -q todolistapi):/app ./todolistapi
+        if: github.event_name != 'pull_request'
+      
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v2
+        with:
+          name: todolistapi-net-app
+          path: ./todolistapi
+        if: github.event_name != 'pull_request'
+      
       - name: Stop Docker Compose
         run: docker-compose down
-        
-        
+
+  prod-deploy:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    needs: build-run-and-test
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: todolistapi-net-app
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'api-todolist'
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FC8F2BCA310241C287F2F1C518677D25 }}
+          package: .      
