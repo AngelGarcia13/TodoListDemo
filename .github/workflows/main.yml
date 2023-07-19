@@ -117,7 +117,7 @@ jobs:
           name: todolistapi-postman-collection
        
       - name: Run Newman in Docker (QA API Tests)
-        run: docker run --network host --name api-integration-tests-qa -v "$(pwd)/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=${{ env.AZURE_WEBAPP_URL }}" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
+        run: docker run --network host --name api-integration-tests-qa -v "$(pwd)/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=${{ vars.AZURE_WEBAPP_URL }}" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
       
       - name: Copy QA API Test Results
         run: docker cp api-integration-tests-qa:etc/newman/result/api-tests-results.xml ./qa
@@ -170,7 +170,7 @@ jobs:
           name: todolistapi-postman-collection
        
       - name: Run Newman in Docker (STG API Tests)
-        run: docker run --network host --name api-integration-tests-stg -v "$(pwd)/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=${{ env.AZURE_WEBAPP_URL }}" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
+        run: docker run --network host --name api-integration-tests-stg -v "$(pwd)/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=${{ vars.AZURE_WEBAPP_URL }}" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
       
       - name: Copy STG API Test Results
         run: docker cp api-integration-tests-stg:etc/newman/result/api-tests-results.xml ./stg
