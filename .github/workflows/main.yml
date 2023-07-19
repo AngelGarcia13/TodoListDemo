@@ -70,6 +70,13 @@ jobs:
           path: ./todolistapi
         if: github.event_name != 'pull_request'
       
+      - name: Upload artifact for newman testing
+        uses: actions/upload-artifact@v2
+        with:
+          name: todolistapi-postman-collection
+          path: ./TodoListApiTests
+        if: github.event_name != 'pull_request'
+        
       - name: Stop Docker Compose
         run: docker-compose down
 
@@ -96,8 +103,21 @@ jobs:
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_QA }}
           package: .      
       
-      - name: Run Newman in Docker (QA API Tests)        
-        run: docker run --network host --name api-integration-tests-qa -v "$(pwd)/TodoListApiTests/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=${{ steps.deploy-to-webapp-qa.outputs.webapp-url }}" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
+  qa-testing:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    needs: qa-deploy
+    environment:
+      name: 'QA'
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: todolistapi-postman-collection
+       
+      - name: Run Newman in Docker (QA API Tests)
+        run: docker run --network host --name api-integration-tests-qa -v "$(pwd)/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=${{ steps.deploy-to-webapp-qa.outputs.webapp-url }}" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
       
       - name: Copy QA API Test Results
         run: docker cp api-integration-tests-qa:etc/newman/result/api-tests-results.xml ./qa
@@ -113,11 +133,10 @@ jobs:
           list-suites: 'all'
           list-tests: 'all'
           fail-on-error: true
-  
   stg-deploy:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
-    needs: qa-deploy
+    needs: qa-testing
     environment:
       name: 'STG'
       url: ${{ steps.deploy-to-webapp-stg.outputs.webapp-url }}
@@ -136,9 +155,22 @@ jobs:
           slot-name: 'stg'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_STG }}
           package: .      
-      
-      - name: Run Newman in Docker (STG API Tests)        
-        run: docker run --network host --name api-integration-tests-stg -v "$(pwd)/TodoListApiTests/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=${{ steps.deploy-to-webapp-stg.outputs.webapp-url }}" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
+       
+  stg-testing:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    needs: stg-deploy
+    environment:
+      name: 'STG'
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: todolistapi-postman-collection
+       
+      - name: Run Newman in Docker (STG API Tests)
+        run: docker run --network host --name api-integration-tests-stg -v "$(pwd)/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=${{ steps.deploy-to-webapp-stg.outputs.webapp-url }}" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
       
       - name: Copy STG API Test Results
         run: docker cp api-integration-tests-stg:etc/newman/result/api-tests-results.xml ./stg
@@ -153,12 +185,12 @@ jobs:
           only-summary: 'false'
           list-suites: 'all'
           list-tests: 'all'
-          fail-on-error: true
+          fail-on-error: true     
   
   prod-deploy:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
-    needs: stg-deploy
+    needs: stg-testing
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
