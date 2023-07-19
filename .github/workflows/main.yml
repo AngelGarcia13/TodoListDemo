@@ -158,7 +158,7 @@ jobs:
   prod-deploy:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
-    needs: build-run-and-test
+    needs: stg-deploy
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
