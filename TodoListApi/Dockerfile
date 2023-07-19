@@ -20,7 +20,7 @@ RUN dotnet test "TodoListUnitTests.csproj" --logger "trx;LogFileName=TodoListUni
 
 FROM build AS publish
 WORKDIR "/src/TodoListApi"
-RUN dotnet publish "TodoListApi.csproj" -c Release -o /app
+RUN dotnet publish "TodoListApi.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
