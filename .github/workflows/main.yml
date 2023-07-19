@@ -127,12 +127,6 @@ jobs:
       
       - name: Copy QA API Test Results
         run: docker cp api-integration-tests-qa:etc/newman/result/api-tests-results.xml .
-      
-      - name: List QA API Test Results
-        run: ls -R
-     
-      - name: Show current directory
-        run: pwd
   
       - name: QA API Tests Reporter
         uses: dorny/test-reporter@v1.6.0
@@ -144,6 +138,7 @@ jobs:
           only-summary: 'false'
           list-suites: 'all'
           list-tests: 'all'
+          max-annotations: '0'
           fail-on-error: true
   
   stg-deploy:
@@ -204,6 +199,7 @@ jobs:
           only-summary: 'false'
           list-suites: 'all'
           list-tests: 'all'
+          max-annotations: '0'
           fail-on-error: true     
   
   prod-deploy:
