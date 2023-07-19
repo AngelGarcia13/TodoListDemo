@@ -93,7 +93,7 @@ jobs:
         with:
           app-name: 'api-todolist'
           slot-name: 'qa'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FC8F2BCA310241C287F2F1C518677D25 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_QA }}
           package: .      
       
       - name: Run Newman in Docker (QA API Tests)        
@@ -134,7 +134,7 @@ jobs:
         with:
           app-name: 'api-todolist'
           slot-name: 'stg'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FC8F2BCA310241C287F2F1C518677D25 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_STG }}
           package: .      
       
       - name: Run Newman in Docker (STG API Tests)        
