@@ -106,6 +106,12 @@ jobs:
   qa-testing:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+      checks: write
+      contents: write
+      pull-requests: write
+      actions: write
     needs: qa-deploy
     environment:
       name: 'QA'
@@ -120,14 +126,14 @@ jobs:
         run: docker run --network host --name api-integration-tests-qa -v "$(pwd)/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=${{ vars.AZURE_WEBAPP_URL }}" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
       
       - name: Copy QA API Test Results
-        run: docker cp api-integration-tests-qa:etc/newman/result/api-tests-results.xml /qareport
+        run: docker cp api-integration-tests-qa:etc/newman/result/api-tests-results.xml .
       
       - name: QA API Tests Reporter
         uses: dorny/test-reporter@v1.6.0
         if: always()
         with:
           name: QA API Tests
-          path: /qareport/api-tests-results.xml
+          path: api-tests-results.xml
           reporter: java-junit
           only-summary: 'false'
           list-suites: 'all'
@@ -159,6 +165,12 @@ jobs:
   stg-testing:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+      checks: write
+      contents: write
+      pull-requests: write
+      actions: write
     needs: stg-deploy
     environment:
       name: 'STG'
@@ -173,14 +185,14 @@ jobs:
         run: docker run --network host --name api-integration-tests-stg -v "$(pwd)/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=${{ vars.AZURE_WEBAPP_URL }}" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
       
       - name: Copy STG API Test Results
-        run: docker cp api-integration-tests-stg:etc/newman/result/api-tests-results.xml /stgreport
+        run: docker cp api-integration-tests-stg:etc/newman/result/api-tests-results.xml .
       
       - name: STG API Tests Reporter
         uses: dorny/test-reporter@v1.6.0
         if: always()
         with:
           name: STG API Tests
-          path: /stgreport/api-tests-results.xml
+          path: api-tests-results.xml
           reporter: java-junit
           only-summary: 'false'
           list-suites: 'all'
