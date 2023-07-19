@@ -63,7 +63,7 @@ jobs:
           fail-on-error: true
       
       - name: Copy API Artifact
-        run: docker cp $(docker-compose ps -q todolistapi):/app ./todolistapi
+        run: docker cp $(docker-compose ps -q todolistapi):/app/publish ./todolistapi
         if: github.event_name != 'pull_request'
       
       - name: Upload artifact for deployment job
