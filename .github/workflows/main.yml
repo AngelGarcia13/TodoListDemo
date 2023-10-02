@@ -45,6 +45,7 @@ jobs:
         run: docker run --network host --name api-integration-tests -v "$(pwd)/TodoListApiTests/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=http://localhost:8080" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
       
       - name: Copy CI API Test Results
+        if: always()
         run: docker cp api-integration-tests:etc/newman/result/api-tests-results.xml .
       
       - name: API Tests Reporter
