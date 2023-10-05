@@ -24,7 +24,7 @@ jobs:
       - name: Build and Run Docker Compose
         run: |
           docker-compose build
-          docker-compose up -d --wait
+          docker-compose up -d
       
       - name: Copy Unit Test Results
         run: docker cp $(docker-compose ps -q todolistapi):/app/testresults ./test-results
@@ -40,7 +40,9 @@ jobs:
           list-suites: 'all'
           list-tests: 'all'
           fail-on-error: true          
-      
+      - name: Sleep for 30 secondsso the database/API are ready
+        run: sleep 30s
+        shell: bash
       - name: Run Newman in Docker (CI API Tests)        
         run: docker run --network host --name api-integration-tests -v "$(pwd)/TodoListApiTests/postman:/etc/newman"  -t postman/newman run TodoListApi.postman_collection.json --env-var "baseUrl=http://localhost:8080" --verbose --insecure --reporters cli,junit --reporter-junit-export result/api-tests-results.xml
       
