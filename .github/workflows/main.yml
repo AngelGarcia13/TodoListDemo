@@ -24,7 +24,7 @@ jobs:
       - name: Build and Run Docker Compose
         run: |
           docker-compose build
-          docker-compose up -d
+          docker-compose up -d --wait
       
       - name: Copy Unit Test Results
         run: docker cp $(docker-compose ps -q todolistapi):/app/testresults ./test-results
