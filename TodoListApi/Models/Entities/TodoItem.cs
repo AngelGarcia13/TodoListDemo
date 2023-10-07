@@ -5,7 +5,7 @@ namespace TodoListApi.Models.Entities;
 public class TodoItem
 {
     [Key]
-    public int Id { get; set; }
+    public int Ids { get; set; }
 
     [Required]
     public string Title { get; set; }
