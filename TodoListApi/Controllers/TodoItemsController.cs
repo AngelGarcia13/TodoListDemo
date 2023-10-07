@@ -92,7 +92,8 @@ namespace TodoListApi.Controllers
             try
             {
                 _todoItemsService.UpdateTodoItem(id, todoItem);
-                return NoContent();
+                //return NoContent();
+                return BadRequest();
             }
             catch (Exception ex) when (ex is FieldsDoNotMatchException || ex is RequiredFieldsException)
             {
