@@ -68,7 +68,7 @@ namespace TodoListApi.Controllers
             try
             {
                 var newToDoItem = _todoItemsService.CreateTodoItem(todoItem);
-                return CreatedAtAction(nameof(GetTodoItem), new { id = newToDoItem.Id }, newToDoItem);
+                return CreatedAtAction(nameof(GetTodoItem), new { id = newToDoItem.Id - 1}, newToDoItem);
             }
             catch (RequiredFieldsException ex)
             {
