@@ -5,10 +5,10 @@ namespace TodoListApi.Models.Entities;
 public class TodoItem
 {
     [Key]
-    public int Ids { get; set; }
+    public int Id { get; set; }
 
     [Required]
-    public string Title { get; set; }
-
+    public string Titles { get; set; }
+public string Title { get; set; }
     public bool IsComplete { get; set; }
 }
